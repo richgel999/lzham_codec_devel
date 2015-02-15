@@ -274,7 +274,7 @@ namespace lzham
       {
          uint len = x[i];
          max_len = math::maximum(len, max_len);
-         code_size_hist.m_num_codes[LZHAM_MIN(len, code_size_histogram::cMaxUnlimitedHuffCodeSize)]++;
+         code_size_hist.m_num_codes[LZHAM_MIN(len, (uint)code_size_histogram::cMaxUnlimitedHuffCodeSize)]++;
          pCodesizes[syms[i].m_left] = static_cast<uint8>(len);
       }
       max_code_size = max_len;

@@ -1,24 +1,5 @@
 // File: lzham_task_pool_pthreads.cpp
-//
-// Copyright (c) 2009-2010 Richard Geldreich, Jr. <richgel99@gmail.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// See Copyright Notice and license at the end of include/lzham.h
 #include "lzham_core.h"
 #include "lzham_pthreads_threading.h"
 #include "lzham_timer.h"
@@ -39,18 +20,22 @@
 
 namespace lzham
 {
-   task_pool::task_pool() :
+   task_pool::task_pool(lzham_malloc_context malloc_context) :
+      m_task_stack(malloc_context),
       m_num_threads(0),
       m_tasks_available(0, 32767),
+      m_malloc_context(malloc_context),
       m_num_outstanding_tasks(0),
       m_exit_flag(false)
    {
       utils::zero_object(m_threads);
    }
 
-   task_pool::task_pool(uint num_threads) :
+   task_pool::task_pool(lzham_malloc_context malloc_context, uint num_threads) :
+      m_task_stack(malloc_context),
       m_num_threads(0),
       m_tasks_available(0, 32767),
+      m_malloc_context(malloc_context),
       m_num_outstanding_tasks(0),
       m_exit_flag(false)
    {

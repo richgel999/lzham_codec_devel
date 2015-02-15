@@ -264,8 +264,7 @@ namespace lzham
    class tsstack
    {
    public:
-      inline tsstack(lzham_malloc_context malloc_context) : 
-         m_malloc_context(malloc_context), 
+      inline tsstack(lzham_malloc_context malloc_context) :
          m_top(0)
       {
          LZHAM_NOTE_UNUSED(malloc_context);
@@ -376,6 +375,8 @@ namespace lzham
       pthread_t m_threads[cMaxThreads];
 
       semaphore m_tasks_available;
+      
+      lzham_malloc_context m_malloc_context;
 
       enum task_flags
       {
