@@ -57,7 +57,7 @@ namespace lzham
          cMatchAccelMaxSupportedProbes,   // m_match_accel_max_probes
       }
    };
-                  
+
    lzcompressor::lzcompressor(lzham_malloc_context malloc_context) :
       m_malloc_context(malloc_context),
       m_src_size(-1),
@@ -66,19 +66,19 @@ namespace lzham
       m_codec(malloc_context),
       m_block_buf(malloc_context),
       m_comp_buf(malloc_context),
-      m_start_of_block_state(malloc_context),
-      m_state(malloc_context),
       m_step(0),
       m_block_start_dict_ofs(0),
       m_block_index(0),
       m_finished(false),
       m_use_task_pool(false),
       m_use_extreme_parsing(false),
+      m_start_of_block_state(malloc_context),
+      m_state(malloc_context),
       m_fast_bytes(128),
       m_num_parse_threads(0)
    {
       LZHAM_VERIFY( ((uint32_ptr)this & (LZHAM_GET_ALIGNMENT(lzcompressor) - 1)) == 0);
-            
+
       for (uint i = 0; i < LZHAM_ARRAY_SIZE(m_parse_thread_state); i++)
          m_parse_thread_state[i].set_malloc_context(malloc_context);
    }
@@ -142,15 +142,15 @@ namespace lzham
          LZHAM_LOG_ERROR(7002);
          return false;
       }
-               
+
       m_params = params;
       m_use_task_pool = (m_params.m_pTask_pool) && (m_params.m_pTask_pool->get_num_threads() != 0) && (m_params.m_max_helper_threads > 0);
 
       m_use_extreme_parsing = ((m_params.m_lzham_compress_flags & LZHAM_COMP_FLAG_EXTREME_PARSING) && (m_params.m_compression_level == cCompressionLevelUber));
-      
+
       if (!m_use_task_pool)
          m_params.m_max_helper_threads = 0;
-      
+
       m_settings = s_level_settings[params.m_compression_level];
 
       m_fast_bytes = m_use_extreme_parsing ? LZHAM_EXTREME_PARSING_FAST_BYTES : m_settings.m_fast_bytes;
@@ -174,7 +174,7 @@ namespace lzham
             return false;
          }
       }
-            
+
       uint max_block_size = dict_size / 8;
       if (m_params.m_block_size > max_block_size)
       {
@@ -216,14 +216,14 @@ namespace lzham
       uint accel_flags = 0;
       if (m_params.m_lzham_compress_flags & LZHAM_COMP_FLAG_DETERMINISTIC_PARSING)
          accel_flags |= search_accelerator::cFlagDeterministic;
-      
+
       if (m_params.m_compression_level > cCompressionLevelFastest)
       {
          if ((m_params.m_lzham_compress_flags & LZHAM_COMP_FLAG_USE_LOW_MEMORY_MATCH_FINDER) == 0)
             accel_flags |= search_accelerator::cFlagHash24;
 
          accel_flags |= search_accelerator::cFlagLen2Matches;
-      }         
+      }
 
       if (!m_accel.init(this, params.m_pTask_pool, match_accel_helper_threads, dict_size, m_settings.m_match_accel_max_matches_per_probe, false, m_settings.m_match_accel_max_probes, accel_flags))
       {
@@ -260,7 +260,7 @@ namespace lzham
             return false;
          }
       }
-            
+
       if (params.m_num_seed_bytes)
       {
          if (!init_seed_bytes())
@@ -402,7 +402,7 @@ namespace lzham
       m_block_start_dict_ofs = 0;
       m_block_index = 0;
       m_state.reset();
-                        
+
       if (m_params.m_num_seed_bytes)
       {
          if (!init_seed_bytes())
@@ -411,7 +411,7 @@ namespace lzham
             return false;
          }
       }
-            
+
       return send_zlib_header();
    }
 
@@ -820,12 +820,12 @@ namespace lzham
    bool lzcompressor::extreme_parse(parse_thread_state &parse_state)
    {
       LZHAM_ASSERT(parse_state.m_bytes_to_match <= cMaxParseGraphNodes);
-            
+
       parse_state.m_failed = false;
       parse_state.m_emit_decisions_backwards = true;
 
       node *pNodes = parse_state.m_nodes;
-      
+
 #ifdef LZHAM_BUILD_DEBUG
       for (uint i = 0; i < (cMaxParseGraphNodes + 1); i++)
       {
@@ -872,7 +872,7 @@ namespace lzham
             if (pCur_node->m_num_node_states == 1)
                break;
          }
-                  
+
          const uint max_admissable_match_len = LZHAM_MIN(static_cast<uint>(CLZBase::cMaxMatchLen), bytes_to_parse - cur_node_index);
          const uint find_dict_size = m_accel.get_cur_dict_size() + cur_lookahead_ofs;
 
@@ -1042,7 +1042,7 @@ namespace lzham
                   break;
                }
             }
-                       
+
             // literal
             bit_cost_t lit_cost = approx_state.get_lit_cost(*this, m_accel, cur_dict_ofs, lit_pred0, is_match_model_index);
             bit_cost_t lit_total_cost = cur_node_total_cost + lit_cost;
@@ -1067,13 +1067,13 @@ namespace lzham
 
       LZHAM_ASSERT(static_cast<int>(cur_node_index) == (pMax_node_in_graph - pNodes));
       uint bytes_actually_parsed = cur_node_index;
-      
+
       // Now get the optimal decisions by starting from the goal node.
       // m_best_decisions is filled backwards.
       if (!parse_state.m_best_decisions.try_reserve(bytes_actually_parsed))
       {
          parse_state.m_failed = true;
-         
+
          for (uint i = 0; i <= bytes_actually_parsed; i++)
             pNodes[i].clear();
 
@@ -1081,7 +1081,7 @@ namespace lzham
 
          return false;
       }
-            
+
       bit_cost_t lowest_final_cost = cBitCostMax; //math::cNearlyInfinite;
       int node_state_index = 0;
       node_state *pLast_node_states = pNodes[bytes_actually_parsed].m_node_states;
@@ -1150,7 +1150,7 @@ namespace lzham
          LZHAM_ASSERT(pNodes[i].m_parent_index == -1);
       }
 #endif
-      
+
       state &approx_state = *parse_state.m_pState;
 
       const uint bytes_to_parse = parse_state.m_bytes_to_match;
@@ -1409,14 +1409,14 @@ namespace lzham
             pCur_node[1].m_parent_index = (int16)cur_node_index;
             approx_state.save_partial_state(pCur_node[1].m_saved_state);
             pCur_node[1].m_lzdec.init(cur_dict_ofs, 0, 0);
-            
+
             pMax_node_in_graph = LZHAM_MAX(pMax_node_in_graph, &pCur_node[1]);
          }
 
          cur_dict_ofs++;
          cur_lookahead_ofs++;
          cur_node_index++;
-         
+
       } // graph search
 
       LZHAM_ASSERT(static_cast<int>(cur_node_index) == (pMax_node_in_graph - pNodes));
@@ -1449,11 +1449,11 @@ namespace lzham
       } while (node_index > 0);
 
       parse_state.m_best_decisions.try_resize_no_construct(static_cast<uint>(pDst_dec - parse_state.m_best_decisions.get_ptr()));
-      
+
       parse_state.m_bytes_actually_parsed = bytes_actually_parsed;
 
       memset(pNodes, 0xFF, (pMax_node_in_graph - pNodes + 1) * sizeof(node_state));
-            
+
       return true;
    }
 
@@ -1465,7 +1465,7 @@ namespace lzham
       scoped_perf_section parse_job_timer(cVarArgs, "parse_job_callback %u", parse_job_index);
 
       LZHAM_NOTE_UNUSED(pData_ptr);
-            
+
       if (m_use_extreme_parsing)
          extreme_parse(parse_state);
       else
@@ -1710,9 +1710,9 @@ namespace lzham
       }
 
       bool computed_adler32 = false;
-            
+
       m_start_of_block_state = m_state;
-            
+
       m_block_start_dict_ofs = m_accel.get_lookahead_pos() & (m_accel.get_max_dict_size() - 1);
 
       uint cur_dict_ofs = m_block_start_dict_ofs;
@@ -1855,7 +1855,7 @@ namespace lzham
                      LZHAM_LOG_ERROR(7053);
                      return false;
                   }
-                  
+
                   m_accel.advance_bytes(best_decisions[i].get_len());
                }
 
@@ -1891,7 +1891,7 @@ namespace lzham
          state_base saved_state;
          if (num_parse_jobs == 1)
             m_state.save_partial_state(saved_state);
-         
+
          for (uint parse_thread_index = 0; parse_thread_index < num_parse_jobs; parse_thread_index++)
          {
             parse_thread_state &parse_thread = m_parse_thread_state[parse_thread_index];
@@ -1935,12 +1935,12 @@ namespace lzham
             parse_thread.m_bytes_actually_parsed = 0;
 
             parse_thread.m_use_semaphore = ((m_use_task_pool) && (num_parse_jobs > 1)) && (parse_thread_index > 0);
-            
+
             if ((m_params.m_compression_level == cCompressionLevelUber) && (num_parse_jobs == 1))
             {
                // Allow the parsers to exit early if they encounter a graph bottleneck, so we can move the coding statistics forward before parsing again.
                parse_thread.m_parse_early_out_thresh = (m_params.m_lzham_compress_flags & LZHAM_COMP_FLAG_EXTREME_PARSING) ? 16 : 64;
-            }   
+            }
 
             parse_thread_start_ofs += parse_thread.m_bytes_to_match;
             parse_thread_remaining -= parse_thread.m_bytes_to_match;
@@ -2004,7 +2004,7 @@ namespace lzham
                   LZHAM_LOG_ERROR(7054);
                   return false;
                }
-                                 
+
                const lzham::vector<lzdecision> &best_decisions = parse_thread.m_best_decisions;
 
                if (parse_thread.m_issue_reset_state_partial)
@@ -2054,7 +2054,7 @@ namespace lzham
                         LZHAM_LOG_ERROR(7056);
                         return false;
                      }
-                     
+
                      total_bytes_parsed += best_decisions[i].get_len();
 
                      if (i == end_dec_index)
@@ -2072,9 +2072,9 @@ namespace lzham
             m_accel.advance_bytes(total_bytes_parsed);
 
          } // coding
-                
+
       } // while (bytes_to_match)
-            
+
       {
          scoped_perf_section add_bytes_timer("add_bytes_end");
          m_accel.add_bytes_end();
@@ -2087,7 +2087,7 @@ namespace lzham
       }
 
 #ifdef LZHAM_LZDEBUG
-      if (!m_codec.encode_bits(366, 12)) 
+      if (!m_codec.encode_bits(366, 12))
       {
          LZHAM_LOG_ERROR(7058);
          return false;
@@ -2096,7 +2096,7 @@ namespace lzham
 
       {
          scoped_perf_section stop_encoding_timer("stop_encoding");
-         if (!m_codec.stop_encoding(true)) 
+         if (!m_codec.stop_encoding(true))
          {
             LZHAM_LOG_ERROR(7059);
             return false;
@@ -2108,7 +2108,7 @@ namespace lzham
       uint compressed_size = m_codec.get_encoding_buf().size();
       LZHAM_NOTE_UNUSED(compressed_size);
 
-      bool used_raw_block = false;
+      //bool used_raw_block = false;
 
 #if !LZHAM_FORCE_ALL_RAW_BLOCKS
    #if (defined(LZHAM_DISABLE_RAW_BLOCKS) || defined(LZHAM_LZDEBUG))
@@ -2195,7 +2195,7 @@ namespace lzham
             return false;
          }
 
-         used_raw_block = true;
+         //used_raw_block = true;
          emit_reset_update_rate_command = false;
       }
 

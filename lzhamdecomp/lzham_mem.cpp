@@ -21,10 +21,12 @@ using namespace lzham;
 #define LZHAM_MEM_STATS 0
 
 #ifndef LZHAM_USE_WIN32_API
-   #ifndef __APPLE__
-      #define _msize malloc_usable_size
-   #else
+   #ifdef _MSC_VER
+      // LZHAM currently needs _msize/malloc_size/malloc_usable_size to function, so it can't be 100% ANSI C++.
+   #elif defined(__APPLE__)
       #define _msize malloc_size
+   #else
+      #define _msize malloc_usable_size
    #endif
 #endif
 

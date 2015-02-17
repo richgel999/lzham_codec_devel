@@ -2,6 +2,8 @@
 // See Copyright Notice and license at the end of include/lzham.h
 #include "lzham_core.h"
 
+#if !LZHAM_ANSI_CPLUSPLUS
+
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD fdwReason, LPVOID lpReserved)
 {
    hModule, fdwReason, lpReserved;
@@ -21,3 +23,4 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD fdwReason, LPVOID lpReserved)
    return TRUE;
 }
 
+#endif

@@ -6,14 +6,16 @@
    #pragma warning (disable: 4127) // conditional expression is constant
 #endif
 
+// If LZHAM_ERROR_LOGGING is 1, LZHAM will write a short internal error codes to stderr when something goes wrong. These codes can be very useful for postmortem debugging.
 #define LZHAM_ERROR_LOGGING 1
+// If LZHAM_VERBOSE_ERROR_LOGGING, LZHAM will also write the function, file and line # along with the error code to stderr.
 #define LZHAM_VERBOSE_ERROR_LOGGING 0
 
 // Enable this when first porting to new platforms - disables all threading and atomic ops in compressor:
 //#define LZHAM_ANSI_CPLUSPLUS 1
 
 #if defined(__FreeBSD__) || defined(__NetBSD__)
-   // TODO: I haven't compiled/tested on these platforms yet, let's play it safe for now.
+   // TODO: I compile and do minimal testing on FreeBSD v10.1 x86, but I haven't enabled threading there yet. (Should be easy because OSX is already supported with threading.)
    #define LZHAM_ANSI_CPLUSPLUS 1
 #endif
 
@@ -219,7 +221,10 @@
    #define LZHAM_PRIi64 PRIi64
    #define LZHAM_PRIu64 PRIu64
 #else
+
+#ifndef _MSC_VER
    #warning Building as vanilla ANSI-C/C++, multi-threaded compression is disabled! Please configure lzhamdecomp/lzham_core.h.
+#endif
 
    // --- Vanilla ANSI-C/C++
    // No threading support, unaligned loads are NOT okay, no atomic ops.

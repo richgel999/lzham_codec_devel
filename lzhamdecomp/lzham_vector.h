@@ -111,6 +111,7 @@ namespace lzham
             clear();
             if (!increase_capacity(other.m_size, false))
             {
+               LZHAM_LOG_ERROR(5008);
                LZHAM_FAIL("lzham::vector operator=: Out of memory!");
                return *this;
             }
@@ -199,7 +200,10 @@ namespace lzham
                if (new_size > m_capacity)
                {
                   if (!increase_capacity(new_size, (new_size == (m_size + 1)) || grow_hint, true))
+                  {
+                     LZHAM_LOG_ERROR(5004);
                      return false;
+                  }
                }
 
                scalar_type<T>::construct_array(m_p + m_size, new_size - m_size);
@@ -216,7 +220,10 @@ namespace lzham
          if (new_size > m_capacity)
          {
             if (!increase_capacity(new_size, (new_size == (m_size + 1)) || grow_hint, true))
+            {
+               LZHAM_LOG_ERROR(5005);
                return false;
+            }
          }
          
          m_size = new_size;
@@ -228,7 +235,10 @@ namespace lzham
       {
          uint cur_size = m_size;
          if (!try_resize(cur_size + i, true))
+         {
+            LZHAM_LOG_ERROR(5006);
             return NULL;
+         }
          return get_ptr() + cur_size;
       }
 
@@ -239,7 +249,10 @@ namespace lzham
          if (m_size >= m_capacity)
          {
             if (!increase_capacity(m_size + 1, true, true))
+            {
+               LZHAM_LOG_ERROR(5007);
                return false;
+            }
          }
 
          scalar_type<T>::construct(m_p + m_size, obj);

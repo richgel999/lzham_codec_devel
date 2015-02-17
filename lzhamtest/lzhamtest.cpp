@@ -37,7 +37,9 @@
 #elif defined(WIN32)
    #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
-   #define LZHAM_USE_LZHAM_DLL 1
+   #ifndef LZHAM_USE_LZHAM_DLL
+      #define LZHAM_USE_LZHAM_DLL 1
+   #endif
 #elif defined(__APPLE__)
    #include <unistd.h>
    #define Sleep(ms) usleep(ms*1000)
@@ -450,10 +452,10 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
    if (options.m_low_memory_finder)
       params.m_compress_flags |= LZHAM_COMP_FLAG_USE_LOW_MEMORY_MATCH_FINDER;
    params.m_fast_bytes = options.m_fast_bytes;
-  
+
    params.m_table_update_rate = options.m_table_update_rate;
    params.m_extreme_parsing_max_best_arrivals  = options.m_max_best_arrivals;
-      
+
    if (pSeed_filename)
    {
       if (!read_seed_file(pSeed_filename, params.m_num_seed_bytes, params.m_pSeed_bytes, params.m_dict_size_log2))
@@ -471,7 +473,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
    timer_ticks total_init_time = timer::get_ticks() - init_start_time;
 
 	float total_comp_time = (float)timer::ticks_to_secs(total_init_time);
-	
+
    if ((pComp_state) && (options.m_test_compressor_reinit))
    {
       if (!lzham_dll.lzham_compress_reinit(pComp_state))
@@ -491,7 +493,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
       _aligned_free((void*)params.m_pSeed_bytes);
       return false;
    }
-   
+
    printf("lzham_compress_init took %3.3fms\n", timer::ticks_to_secs(total_init_time)*1000.0f);
 
    lzham_compress_status_t status = LZHAM_COMP_STATUS_FAILED;
@@ -572,7 +574,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
 
             total_output_bytes += out_num_bytes;
          }
-         
+
          if (status >= LZHAM_COMP_STATUS_FIRST_SUCCESS_OR_FAILURE_CODE)
             break;
       }
@@ -587,7 +589,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
       if ((pass == 0) && (total_passes == 2))
       {
          printf("\n");
-         
+
          uint64 cmp_file_size = _ftelli64(pOutFile);
          printf("Input file size: " QUAD_INT_FMT ", Compressed file size: " QUAD_INT_FMT ", Ratio: %3.2f%%\n", src_file_size, cmp_file_size, src_file_size ? ((1.0f - (static_cast<float>(cmp_file_size) / src_file_size)) * 100.0f) : 0.0f);
 
@@ -608,7 +610,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
 
          fseek(pInFile, 0, SEEK_SET);
          fseek(pOutFile, static_cast<long>(cmp_file_header_size), SEEK_SET);
-         
+
          src_bytes_left = src_file_size;
          in_file_buf_size = 0;
          in_file_buf_ofs = 0;
@@ -617,11 +619,11 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
    }
 
    src_bytes_left += (in_file_buf_size - in_file_buf_ofs);
-		
+
 	timer_ticks deinit_start_time = timer::get_ticks();
    uint32 adler32 = lzham_dll.lzham_compress_deinit(pComp_state);
 	timer_ticks total_deinit_time = timer::get_ticks() - deinit_start_time;
-	
+
 	total_comp_time += (float)timer::ticks_to_secs(total_deinit_time);
 	if (pTotal_comp_time)
 		*pTotal_comp_time = total_comp_time;
@@ -662,7 +664,7 @@ static bool compress_file(ilzham &lzham_dll, const char* pSrc_filename, const ch
 	printf("Compression-only time: %3.6f\nConsumption rate: %9.1f bytes/sec, Emission rate: %9.1f bytes/sec\n", total_comp_time, src_file_size / total_comp_time, cmp_file_size / total_comp_time);
    printf("Total time: %3.6f\nConsumption rate: %9.1f bytes/sec, Emission rate: %9.1f bytes/sec\n", total_time, src_file_size / total_time, cmp_file_size / total_time);
    printf("Input file adler32: 0x%08X\n", adler32);
-		
+
    return true;
 }
 
@@ -764,9 +766,9 @@ static bool decompress_file(ilzham &lzham_dll, const char* pSrc_filename, const 
       params.m_decompress_flags |= LZHAM_DECOMP_FLAG_COMPUTE_ADLER32;
    if (options.m_unbuffered_decompression)
       params.m_decompress_flags |= LZHAM_DECOMP_FLAG_OUTPUT_UNBUFFERED;
-	
+
 	params.m_table_update_rate = options.m_table_update_rate;
-   	
+
    timer_ticks start_time = timer::get_ticks();
    double decomp_only_time = 0;
 
@@ -1041,10 +1043,10 @@ static bool find_files(std::string pathname, const std::string &filename, string
            files.push_back(pathname + filename);
 
      } while (FindNextFileA(findHandle, &find_data));
-          
+
      FindClose(findHandle);
    }
-   
+
    if (recursive)
    {
       string_array paths;
@@ -1071,9 +1073,9 @@ static bool find_files(std::string pathname, const std::string &filename, string
                paths.push_back(filename);
 
          } while (FindNextFileA(findHandle, &find_data));
-         
+
          FindClose(findHandle);
-            
+
          for (uint i = 0; i < paths.size(); i++)
          {
             const std::string &path = paths[i];
@@ -1184,7 +1186,7 @@ struct file_stats
 
 	std::string m_filename;
 	int64 m_size;
-	
+
 	int64 m_lzma_size;
 	float m_lzma_comp_time;
 	float m_lzma_decomp_time;
@@ -1269,7 +1271,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			{
 				printf("Skipping too small or large file \"%s\"\n", src_file.c_str());
 				continue;
-			}	
+			}
 		}
 
       if (!ensure_file_is_writable(cmp_file))
@@ -1303,7 +1305,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 
          file_options.print();
       }
-		
+
 		float comp_time = 0;
 		float decomp_time = 0;
 
@@ -1323,7 +1325,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
             print_error("Unable to create file \"%s\"!\n", decomp_file);
             return false;
          }
-						
+
          status = decompress_file(lzham_dll, cmp_file, decomp_file, file_options, pSeed_filename, &decomp_time);
          if (!status)
          {
@@ -1360,13 +1362,13 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 		if (pStats)
 		{
 			file_stats stats;
-			
+
 			stats.m_filename = src_file;
 			stats.m_size = src_file_size;
 			stats.m_lzham_comp_time = comp_time;
 			stats.m_lzham_decomp_time = decomp_time;
 			stats.m_lzham_size = cmp_file_size;
-#if 0												
+#if 0
 			lzham_uint32 src_size = 0;
 			const void *pSrc_file_data = NULL;
 			if (!read_seed_file(src_file.c_str(), src_size, pSrc_file_data, 31))
@@ -1380,7 +1382,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			bf::lzma_codec lzma;
 			bf::uint8_vector cmp_buf;
 			bf::uint8_vector decomp_buf(src_size);
-			
+
 			timer timer;
 			timer.start();
 
@@ -1392,7 +1394,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			}
 
 			float lzma_comp_time = timer.get_elapsed_secs();
-			
+
 			timer.start();
 
 			if (!lzma.unpack(&cmp_buf[0], (uint)cmp_buf.size(), decomp_buf, true))
@@ -1409,11 +1411,11 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			stats.m_lzma_size = (uint)cmp_buf.size();
 
 			printf("%u comp bytes, comp time: %f, decomp time: %f\n", (uint)cmp_buf.size(), lzma_comp_time, lzma_decomp_time);
-						
+
 			// miniz
 
 			cmp_buf.resize((uint)((src_size * 11ULL) / 10ULL + 1024ULL));
-			
+
 			timer.start();
 			stats.m_miniz_size = tdefl_compress_mem_to_mem(&cmp_buf[0], cmp_buf.size(), pSrc_file_data, src_size, tdefl_create_comp_flags_from_zip_params(9, -15, MZ_DEFAULT_STRATEGY));
 			stats.m_miniz_comp_time = timer.get_elapsed_secs();
@@ -1429,7 +1431,7 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			timer.start();
 			stats.m_lz4_size = LZ4_compressHC((const char *)pSrc_file_data, (char *)&cmp_buf[0], src_size);
 			stats.m_lz4_comp_time = timer.get_elapsed_secs();
-			
+
 			timer.start();
 			decomp_buf.resize(src_size);
 			uint decomp_bytes = LZ4_decompress_safe((const char *)&cmp_buf[0], (char *)&decomp_buf[0], stats.m_lz4_size, (uint)decomp_buf.size());
@@ -1440,15 +1442,15 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 			if (decomp_bytes != src_size)
 			{
 				printf("LZ4 failed!\n");
-				
+
 				_aligned_free((void*)pSrc_file_data);
 
 				return false;
 			}
-									
+
 			_aligned_free((void*)pSrc_file_data);
 #endif
-						
+
 			pStats->push_back(stats);
 		}
 
@@ -1464,10 +1466,10 @@ static bool test_recursive(ilzham &lzham_dll, const char *pPath, comp_options op
 
       printf("Memory allocated relative to first file: %I64i\n", bytes_allocated);
 
-#ifdef _DEBUG      
+#ifdef _DEBUG
       if (!_CrtCheckMemory())
       {
-         printf("_CrtCheckMemory() failed!\n");         
+         printf("_CrtCheckMemory() failed!\n");
       }
 #endif
 
@@ -1783,7 +1785,7 @@ int main_internal(string_array cmd_line, int num_helper_threads, ilzham &lzham_d
             print_error("Too many filenames!\n");
             return EXIT_FAILURE;
          }
-         
+
          for (uint i = 0; i < 1; i++)
          {
             if (decompress_file(lzham_dll, cmd_line[0].c_str(), cmd_line[1].c_str(), options, seed_filename.length() ? seed_filename.c_str() : NULL))
@@ -1823,20 +1825,20 @@ int main_internal(string_array cmd_line, int num_helper_threads, ilzham &lzham_d
 
 				for (uint i = 0; i < stats.size(); i++)
 				{
-					fprintf(pFile, "%s, %" PRIi64 ", , %" PRIi64 ", %f, %f, %f, , %" PRIi64 ", %f, %f, %f", 
+					fprintf(pFile, "%s, %" PRIi64 ", , %" PRIi64 ", %f, %f, %f, , %" PRIi64 ", %f, %f, %f",
 						stats[i].m_filename.c_str(),
 						stats[i].m_size,
-						stats[i].m_lzma_size, ((1.0f - (static_cast<float>(stats[i].m_lzma_size) / stats[i].m_size)) * 100.0f), stats[i].m_lzma_comp_time, stats[i].m_lzma_decomp_time, 
+						stats[i].m_lzma_size, ((1.0f - (static_cast<float>(stats[i].m_lzma_size) / stats[i].m_size)) * 100.0f), stats[i].m_lzma_comp_time, stats[i].m_lzma_decomp_time,
 						stats[i].m_lzham_size, ((1.0f - (static_cast<float>(stats[i].m_lzham_size) / stats[i].m_size)) * 100.0f), stats[i].m_lzham_comp_time, stats[i].m_lzham_decomp_time);
 
 #if 0
-					fprintf(pFile, ",");										
+					fprintf(pFile, ",");
 					for (uint j = 0; j < 64; j++)
 					{
 						float bps = (low_bps + (j * scale_bps)) / 8.0f;
 						float download_time = stats[i].m_lzma_size / bps;
 						float decomp_time = stats[i].m_lzma_decomp_time * cpu_slowdown;
-												
+
 						float total_time = bf::math::maximum<float>(download_time, decomp_time);
 						//float total_time = download_time + decomp_time;
 						fprintf(pFile, ", %3.2f", stats[i].m_size / total_time / (1024.0f*1024.0f));
@@ -1911,7 +1913,7 @@ int main_internal(string_array cmd_line, int num_helper_threads, ilzham &lzham_d
 			if (test_recursive(lzham_dll, cmd_line[0].c_str(), options, seed_filename.length() ? seed_filename.c_str() : NULL))
 				exit_status = EXIT_SUCCESS;
 #endif
-            
+
          break;
       }
       default:

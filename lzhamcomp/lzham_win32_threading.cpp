@@ -221,7 +221,7 @@ namespace lzham
       if (g_num_processors > 1)
       {
          // use all CPU's
-         return LZHAM_MIN(task_pool::cMaxThreads, g_num_processors - 1);
+         return LZHAM_MIN((uint)task_pool::cMaxThreads, g_num_processors - 1);
       }
 
       return 0;
