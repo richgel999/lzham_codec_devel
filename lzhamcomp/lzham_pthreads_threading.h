@@ -29,7 +29,7 @@ namespace lzham
       LZHAM_NO_COPY_OR_ASSIGNMENT_OP(semaphore);
 
    public:
-      inline semaphore(long initialCount, long maximumCount)
+      inline semaphore(long initialCount = 0, long maximumCount = 1)
       {
          LZHAM_NOTE_UNUSED(maximumCount);
          LZHAM_ASSERT(maximumCount >= initialCount);
