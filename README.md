@@ -8,6 +8,8 @@ OSX, and iOS, with Android support on the way.</p>
 
 <p>Some slightly out of date API documentation is here (I'll be migrating this to github): https://code.google.com/p/lzham/wiki/API_Docs</p>
 
+<p>This repo is currently LZHAM v1.0. The unstabling/testing version (v1.1) is here: https://github.com/richgel999/lzham_codec_devel</p>
+
 <h3>Introduction</h3>
 
 <p>LZHAM is a lossless (LZ based) data compression codec optimized for particularly fast decompression at very high compression ratios with a zlib compatible API. 
