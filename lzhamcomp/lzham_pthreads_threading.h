@@ -160,10 +160,10 @@ namespace lzham
          }
       }
 
-      inline bool wait(uint32 milliseconds = UINT32_MAX)
+      inline bool wait(uint32 milliseconds = cUINT32_MAX)
       {
          int status;
-         if (milliseconds == UINT32_MAX)
+         if (milliseconds == cUINT32_MAX)
          {
             status = sem_wait(&m_sem);
          }

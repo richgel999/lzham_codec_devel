@@ -32,12 +32,12 @@ namespace lzham_ex
    typedef signed __int64 int64;
    typedef unsigned __int64 uint64;
 
-   const uint16 UINT16_MIN = 0;
-   const uint16 UINT16_MAX = 0xFFFFU;
-   const uint64 UINT64_MIN = 0;
-   const uint64 UINT64_MAX = 0xFFFFFFFFFFFFFFFFULL;    //0xFFFFFFFFFFFFFFFFui64;
-   const int64 INT64_MIN = (int64)0x8000000000000000ULL; //(-9223372036854775807i64 - 1);
-   const int64 INT64_MAX = (int64)0x7FFFFFFFFFFFFFFFULL; //9223372036854775807i64;
+   const uint16 cUINT16_MIN = 0;
+   const uint16 cUINT16_MAX = 0xFFFFU;
+   const uint64 cUINT64_MIN = 0;
+   const uint64 cUINT64_MAX = 0xFFFFFFFFFFFFFFFFULL;    //0xFFFFFFFFFFFFFFFFui64;
+   const int64 cINT64_MIN = (int64)0x8000000000000000ULL; //(-9223372036854775807i64 - 1);
+   const int64 cINT64_MAX = (int64)0x7FFFFFFFFFFFFFFFULL; //9223372036854775807i64;
 
    template<typename T> inline void zero_object(T& obj) { memset(&obj, 0, sizeof(obj)); }
 } // namespace lzham_ex

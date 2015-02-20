@@ -12,8 +12,8 @@ namespace lzham_ex
       cDataStreamSeekable = 4
    };
    
-   const int64 DATA_STREAM_SIZE_UNKNOWN = INT64_MAX;
-   const int64 DATA_STREAM_SIZE_INFINITE = UINT64_MAX;
+   const int64 DATA_STREAM_SIZE_UNKNOWN = cINT64_MAX;
+   const int64 DATA_STREAM_SIZE_INFINITE = cUINT64_MAX;
    
    class data_stream
    {

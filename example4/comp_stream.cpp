@@ -95,8 +95,8 @@ namespace lzham_ex
       if (!out_buf_size)
          return true;
          
-      assert(out_buf_size <= UINT16_MAX);
-      assert(cBufSize <= UINT16_MAX);
+      assert(out_buf_size <= cUINT16_MAX);
+      assert(cBufSize <= cUINT16_MAX);
 
       if (!m_pOutput_stream->is_seekable())
       {
@@ -385,7 +385,7 @@ namespace lzham_ex
          }
       }
                        
-      m_buf.resize(UINT16_MAX);
+      m_buf.resize(cUINT16_MAX);
       
       m_opened = true;
 

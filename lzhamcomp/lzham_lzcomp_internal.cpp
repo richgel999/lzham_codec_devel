@@ -1145,7 +1145,7 @@ namespace lzham
 #ifdef LZHAM_BUILD_DEBUG
       for (uint i = 1; i < (cMaxParseGraphNodes + 1); i++)
       {
-         LZHAM_ASSERT(pNodes[i].m_total_cost == UINT64_MAX);
+         LZHAM_ASSERT(pNodes[i].m_total_cost == cUINT64_MAX);
          LZHAM_ASSERT(pNodes[i].m_total_complexity == UINT_MAX);
          LZHAM_ASSERT(pNodes[i].m_parent_index == -1);
       }

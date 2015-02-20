@@ -393,7 +393,7 @@ namespace lzham
 
       if (sizeof(size_t) > sizeof(uint32))
       {
-         if (src_len > UINT32_MAX)
+         if (src_len > cUINT32_MAX)
          {
             LZHAM_LOG_ERROR(6021);
             return LZHAM_COMP_STATUS_INVALID_PARAMETER;

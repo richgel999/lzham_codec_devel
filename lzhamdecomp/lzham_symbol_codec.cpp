@@ -690,7 +690,7 @@ namespace lzham
       freq++;
       m_sym_freq[sym] = static_cast<uint16>(freq);
 
-      LZHAM_ASSERT(freq <= UINT16_MAX);
+      LZHAM_ASSERT(freq <= cUINT16_MAX);
 
       if (--m_symbols_until_update == 0)
       {
@@ -865,7 +865,7 @@ namespace lzham
       freq++;
       model.m_sym_freq[sym] = static_cast<uint16>(freq);
       
-      LZHAM_ASSERT(freq <= UINT16_MAX);
+      LZHAM_ASSERT(freq <= cUINT16_MAX);
 
       if (--model.m_symbols_until_update == 0)
       {
@@ -1322,8 +1322,8 @@ namespace lzham
       {
          uint32 t = pTables->m_lookup[m_bit_buf >> (cBitBufSize - pTables->m_table_bits)];
 
-         LZHAM_ASSERT(t != UINT32_MAX);
-         sym = t & UINT16_MAX;
+         LZHAM_ASSERT(t != cUINT32_MAX);
+         sym = t & cUINT16_MAX;
          len = t >> 16;
 
          LZHAM_ASSERT(model.m_code_sizes[sym] == len);
@@ -1359,7 +1359,7 @@ namespace lzham
       freq++;
       model.m_sym_freq[sym] = static_cast<uint16>(freq);
       
-      LZHAM_ASSERT(freq <= UINT16_MAX);
+      LZHAM_ASSERT(freq <= cUINT16_MAX);
       
       if (--model.m_symbols_until_update == 0)
       {
