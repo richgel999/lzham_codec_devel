@@ -1860,7 +1860,17 @@ namespace lzham
                }
 
                if ((!greedy_parse_state.m_greedy_parse_gave_up) || (!bytes_to_match))
+			   {
+				   if (!computed_adler32)
+				   {
+					   computed_adler32 = true;
+
+					   scoped_perf_section add_bytes_timer("adler32");
+					   m_src_adler32 = adler32(pBuf, buf_len, m_src_adler32);
+				   }
+
                   continue;
+			   }
             }
          }
 
