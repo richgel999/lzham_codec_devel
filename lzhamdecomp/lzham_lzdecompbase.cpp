@@ -81,7 +81,7 @@ namespace lzham
 
       m_dict_size_log2 = dict_size_log2;
       m_dict_size = 1U << dict_size_log2;
-		m_num_lzx_slots = g_num_lzx_position_slots[dict_size_log2  - LZHAM_MIN_DICT_SIZE_LOG2];
+      m_num_lzx_slots = g_num_lzx_position_slots[dict_size_log2  - LZHAM_MIN_DICT_SIZE_LOG2];
 
 #if 0
 		int i, j;

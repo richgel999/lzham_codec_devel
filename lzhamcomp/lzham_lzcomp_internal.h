@@ -462,7 +462,7 @@ namespace lzham
 
          semaphore m_finished;
 
-         bool init(lzcompressor& lzcomp, const lzcompressor::init_params &m_params);
+         bool init(lzcompressor& lzcomp, const lzcompressor::init_params &params);
                   
          void set_malloc_context(lzham_malloc_context malloc_context)
          {

@@ -5,6 +5,9 @@
 // See include/lzham.h for documentation on the public LZHAM API.
 // Tested on Windows, Linux, and OSX. On iOS, I use a small "Hello World" test app to test the codec.
 // See Copyright Notice and license at the end of include/lzham.h
+//
+// FIXME: There's some particularly ugly testing code in here that needs to be removed.
+//
 #if defined(__GNUC__)
 #define _FILE_OFFSET_BITS 64
 #endif

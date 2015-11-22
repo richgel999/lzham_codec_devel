@@ -7,9 +7,14 @@
 #endif
 
 // If LZHAM_ERROR_LOGGING is 1, LZHAM will write a short internal error codes to stderr when something goes wrong. These codes can be very useful for postmortem debugging.
-#define LZHAM_ERROR_LOGGING 1
+#ifndef LZHAM_ERROR_LOGGING
+	#define LZHAM_ERROR_LOGGING 0
+#endif
+
 // If LZHAM_VERBOSE_ERROR_LOGGING, LZHAM will also write the function, file and line # along with the error code to stderr.
-#define LZHAM_VERBOSE_ERROR_LOGGING 0
+#ifndef LZHAM_VERBOSE_ERROR_LOGGING
+	#define LZHAM_VERBOSE_ERROR_LOGGING 0
+#endif
 
 // Enable this when first porting to new platforms - disables all threading and atomic ops in compressor:
 //#define LZHAM_ANSI_CPLUSPLUS 1

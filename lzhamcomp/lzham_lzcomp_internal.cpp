@@ -107,9 +107,9 @@ namespace lzham
       return true;
    }
 
-   bool lzcompressor::raw_parse_thread_state::init(lzcompressor& lzcomp, const lzcompressor::init_params &m_params)
+   bool lzcompressor::raw_parse_thread_state::init(lzcompressor& lzcomp, const lzcompressor::init_params &params)
    {
-      if (!m_state.init(lzcomp, m_params.m_table_max_update_interval, m_params.m_table_update_interval_slow_rate))
+      if (!m_state.init(lzcomp, params.m_table_max_update_interval, params.m_table_update_interval_slow_rate))
          return false;
 
       if (lzcomp.m_use_extreme_parsing)
@@ -1990,7 +1990,7 @@ namespace lzham
             m_src_adler32 = adler32(pBuf, buf_len, m_src_adler32);
          }
 
-#define LZHAM_RELEASE_SEMAPHORES for (uint parse_thread_index = 1; parse_thread_index < num_parse_jobs; parse_thread_index++) if (m_parse_thread_state[parse_thread_index].m_use_semaphore) { m_parse_thread_state[parse_thread_index].m_finished.wait(); m_parse_thread_state[parse_thread_index].m_use_semaphore = false; }
+#define LZHAM_RELEASE_SEMAPHORES for (uint pti = 1; pti < num_parse_jobs; pti++) if (m_parse_thread_state[pti].m_use_semaphore) { m_parse_thread_state[pti].m_finished.wait(); m_parse_thread_state[pti].m_use_semaphore = false; }
 
          {
             scoped_perf_section coding_timer("coding");
