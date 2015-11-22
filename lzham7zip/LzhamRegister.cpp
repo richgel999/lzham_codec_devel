@@ -1,4 +1,6 @@
 // LzhamRegister.cpp
+// Portions of this module are from 7-zip, by Igor Pavlov, which you can download here:
+// http://www.7-zip.org/
 
 //#include "StdAfx.h"
 #include "../../C/Alloc.h"
