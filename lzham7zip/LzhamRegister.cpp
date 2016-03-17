@@ -19,7 +19,7 @@
 #define LZHAMCODEC_DEBUG_OUTPUT 1
 #endif
 
-#define LZHAM_PROPS_VER (Byte)(LZHAM_DLL_VERSION)
+#define LZHAM_PROPS_VER (Byte)(LZHAM_DLL_VERSION & 0xFF)
 
 namespace NCompress
 {
@@ -282,7 +282,9 @@ namespace NCompress
 
             if (status == LZHAM_DECOMP_STATUS_SUCCESS)
                break;
-                        
+				if (status == LZHAM_DECOMP_STATUS_HAS_MORE_OUTPUT && _outSizeProcessed >= _outSize) // avoid infinite loop when extract
+					break;                                                                           // not last file from the solid archive
+
             UInt64 inSize = _inSizeProcessed - startInProgress;
             if (progress)
             {
@@ -294,7 +296,7 @@ namespace NCompress
       }
 
       STDMETHODIMP CDecoder::Code(ISequentialInStream *inStream, ISequentialOutStream *outStream,
-         const UInt64 * inSize, const UInt64 *outSize, ICompressProgressInfo *progress)
+         const UInt64* /*inSize*/, const UInt64 *outSize, ICompressProgressInfo *progress)
       {
          if (_inBuf == 0)
             return E_INVALIDARG;
@@ -475,7 +477,7 @@ namespace NCompress
                   if (prop.vt != VT_UI4)
                      return E_INVALIDARG;
 
-                  bool val = (UInt32)prop.ulVal != 0;
+                  //bool val = (UInt32)prop.ulVal != 0;
 
                   if (prop.boolVal)
                      _props._flags |= LZHAM_COMP_FLAG_DETERMINISTIC_PARSING;
@@ -515,7 +517,7 @@ namespace NCompress
                      return E_INVALIDARG;
                   }
 
-                  _props._dict_size = bits; 
+                  _props._dict_size = (Byte)bits;
                   
 #if LZHAMCODEC_DEBUG_OUTPUT                  
                   printf("Dict size: %u\n", bits);
