@@ -103,6 +103,7 @@ LZHAM also supports a usable subset of the zlib API with extensions, either incl
 
 <h3>Usage Tips</h3>
 
+* Important: If you use the -hX option during compression with lzhamtest.exe, you MUST also use the same option during decompression or it won't work. This is because the Huffman update frequency setting is not stored in the output.
 * Always try to use the smallest dictionary size that makes sense for the file or block you are compressing, i.e. don't use a 128MB dictionary for a 15KB file. The codec
 doesn't automatically choose for you because in streaming scenarios it has no idea how large the file or block will be.
 * The larger the dictionary, the more RAM is required during compression and decompression. I would avoid using more than 8-16MB dictionaries on iOS.
