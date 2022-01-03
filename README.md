@@ -3,7 +3,9 @@ LZHAM - Lossless Data Compression Codec
 
 <p>Copyright (c) 2009-2015 Richard Geldreich, Jr. - richgel99@gmail.com - MIT License</p>
 
-<p>Note: This is the unstable/experimental LZHAM repo, currently at v1.1. The stable repo (v1.0) is here: https://github.com/richgel999/lzham_codec</p>
+<p>Notes: This is the development version of the LZHAM repo, currently at v1.1. The stable repo (v1.0) is here: https://github.com/richgel999/lzham_codec
+
+<p>LZHAM is now in the Public Domain, but I haven't had a chance to update this repo yet.
 
 <p>LZHAM is a lossless data compression codec written in C/C++ (specifically C++03), with a compression ratio similar to LZMA but with 1.5x-8x faster decompression speed. It officially supports Linux x86/x64, Windows x86/x64, 
 OSX, and iOS, with Android support on the way.</p>
