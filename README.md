@@ -5,7 +5,7 @@ LZHAM - Lossless Data Compression Codec
 
 <p>Notes: This is the development version of the LZHAM repo, currently at v1.1. The stable repo (v1.0) is here: https://github.com/richgel999/lzham_codec
 	
-The "devel" version includes an even stronger (but slower) parser, enabled using the -x option.
+The "devel" version includes an even stronger (but slower) parser, enabled using the -x option. This parser supports multiple arrivals at each lookahead entry.
 
 <p>LZHAM is now in the Public Domain, but I haven't had a chance to update this repo yet.
 
