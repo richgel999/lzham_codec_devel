@@ -24,7 +24,13 @@ void lzham_fail(const char* pExp, const char* pFile, unsigned line);
 #if defined(__GNUC__) && LZHAM_PLATFORM_PC
 extern __inline__ __attribute__((__always_inline__,__gnu_inline__)) void lzham_yield_processor()
 {
-   __asm__ __volatile__("pause");
+	#if LZHAM_PLATFORM_PC_X64 || LZHAM_PLATFORM_PC_X86
+        __asm__ __volatile__("pause");
+    #elif LZHAM_PLATFORM_PC_ARM64 || LZHAM_PLATFORM_PC_ARM32
+		__asm__ __volatile__("yield");
+	#else
+		__asm__ __volatile__("rep; nop" : : : "memory");
+	#endif
 }
 #elif LZHAM_PLATFORM_X360
 #define lzham_yield_processor() \
