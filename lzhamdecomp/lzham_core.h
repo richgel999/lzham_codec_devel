@@ -150,15 +150,23 @@
    #elif (TARGET_OS_MAC == 1)
       #define LZHAM_PLATFORM_PC 1
 
-      #if defined(_WIN64) || defined(__MINGW64__) || defined(_LP64) || defined(__LP64__)
-         #define LZHAM_PLATFORM_PC_X64 1
-         #define LZHAM_64BIT_POINTERS 1
-         #define LZHAM_CPU_HAS_64BIT_REGISTERS 1
-      #else
-         #define LZHAM_PLATFORM_PC_X86 1
-         #define LZHAM_64BIT_POINTERS 0
-         #define LZHAM_CPU_HAS_64BIT_REGISTERS 0
-      #endif
+	#if defined(__arm64__) || defined(__aarch64__)
+		#define LZHAM_PLATFORM_PC_ARM64 1
+		#define LZHAM_64BIT_POINTERS 1
+		#define LZHAM_CPU_HAS_64BIT_REGISTERS 1
+	#elif defined(__arm__)
+		#define LZHAM_PLATFORM_PC_ARM32 1
+		#define LZHAM_64BIT_POINTERS 0
+		#define LZHAM_CPU_HAS_64BIT_REGISTERS 0
+	#elif defined(_WIN64) || defined(__MINGW64__) || defined(_LP64) || defined(__LP64__)
+		#define LZHAM_PLATFORM_PC_X64 1
+		#define LZHAM_64BIT_POINTERS 1
+		#define LZHAM_CPU_HAS_64BIT_REGISTERS 1
+	#else
+		#define LZHAM_PLATFORM_PC_X86 1
+		#define LZHAM_64BIT_POINTERS 0
+		#define LZHAM_CPU_HAS_64BIT_REGISTERS 0
+	#endif
 
       #define LZHAM_USE_UNALIGNED_INT_LOADS 1
 
